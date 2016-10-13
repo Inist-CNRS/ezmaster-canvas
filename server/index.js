@@ -16,13 +16,19 @@ var app = express(),
 
 /* Constants */
 // EzMaster config file
-var CONFIG = require('/etc/ezmaster.json');
+var EZMASTER_CONFIG = require('/etc/ezmaster.json'),
+  CONFIG = {
+    name: "MyApp"
+  };
+
+// If there is a configPath, we load it
+if (EZMASTER_CONFIG.configPath) CONFIG = require(EZMASTER_CONFIG.configPath);
 
 // Directories
 const DIRECTORIES = {
-  'INPUT': path.resolve(__dirname, CONFIG.dataPath),
-  'OUTPUT': path.resolve(__dirname, CONFIG.outputPath),
-  'PROGRAM': path.resolve(__dirname, '../', CONFIG.program.directory)
+  'INPUT': path.resolve(__dirname, EZMASTER_CONFIG.dataPath),
+  'OUTPUT': path.resolve(__dirname, EZMASTER_CONFIG.outputPath),
+  'PROGRAM': path.resolve(__dirname, '../', EZMASTER_CONFIG.program.directory)
 };
 
 /* Variables */
@@ -35,8 +41,8 @@ var program = { // Program infos, statements and child_process will be there
   // List of all app clients
   clients = {};
 
-program.cmd = CONFIG.program.cmd ||  program.cmd;
-program.opts = CONFIG.program.opts ||  program.opts;
+program.cmd = EZMASTER_CONFIG.program.cmd ||  program.cmd;
+program.opts = EZMASTER_CONFIG.program.opts ||  program.opts;
 
 // App use Nunjucks template engine
 nunjucks.configure('views', {
@@ -60,8 +66,8 @@ app.use('/output', express.static(DIRECTORIES.OUTPUT, {
 app.use(express.static('public'));
 
 // Listening port 3000
-server.listen(CONFIG.httpPort, function() {
-  console.log(kuler('Server listening on port : ' + CONFIG.httpPort, 'green'));
+server.listen(EZMASTER_CONFIG.httpPort, function() {
+  console.log(kuler('Server listening on port : ' + EZMASTER_CONFIG.httpPort, 'green'));
 });
 
 io.on('connection', function(socket) {
@@ -175,10 +181,10 @@ app.get('/', function(req, res) {
  * @param {Array} files List of files => [name, name, ...]
  * @return {Array} List of files with more infos (like name & full path) => [{name, path}, ...]
  */
-function getFiles(files){
+function getFiles(files) {
   var result = [];
   for (var i = 0; i < files.length; i++) {
-    if(files[i][0] !== '.') {
+    if (files[i][0] !== '.') {
       result.push({
         name: files[i],
         path: path.join(DIRECTORIES.OUTPUT, files[i])

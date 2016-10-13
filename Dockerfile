@@ -6,6 +6,7 @@ COPY . /app/
 
 # ------------------------------------------------------- #
 # INSTALL HERE YOUR PROGRAM DEPENDENCIES (ex below, java) #
+# Think about apt-get update befor apt-get install        #
 # RUN apt-get update                                      #
 # RUN apt-get install -y default-jre                      #
 # RUN make install                                        #
@@ -23,10 +24,9 @@ EXPOSE 3000
 # Check the Readme for more infos
 RUN echo '{ \
   "httpPort": 3000, \
-  "configPath": "", \
+  "configPath": "/app/config.json", \
   "dataPath": "/app/input/", \
   "outputPath": "/app/output/", \
-  "name": "MyApp", \
   "program": { \
     "directory": "", \
     "cmd": "ls", \

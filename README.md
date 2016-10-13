@@ -60,7 +60,6 @@ RUN echo '{ \
   "configPath": "", \
   "dataPath": "/app/input/", \
   "outputPath": "/app/output/", \
-  "name": "MyApp", \
   "program": { \
     "directory": "", \
     "cmd": "java", \

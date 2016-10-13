@@ -1,0 +1,19 @@
+{
+  "name": "ezmaster-app-canvas",
+  "version": "1.0.0",
+  "description": "Just a simple Http Server, usefull if you need to 'ezmasterize' and application with ouput data",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "kuler": "0.0.0",
+    "nunjucks": "^2.4.2",
+    "socket.io": "^1.4.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "istex",
+  "license": "ISC"
+}

@@ -1,0 +1,73 @@
+<html>
+<head>
+  <title>{{name}}</title>
+    <!-- Compiled < minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
+  <link rel="stylesheet" type="text/css" href="https://raw.githubusercontent.com/abodelot/jquery.json-viewer/master/json-viewer/jquery.json-viewer.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">  
+    <div class="item item-main-left">
+      <div class="item item-left-top">
+        <ul class="item list-input">
+          <h5>INPUT</h5>
+          <div id="input"></div>
+        </ul>
+        <ul class="item list-output">
+          <h5>OUTPUT</h5>
+          <div id="output"></div>
+        </ul>
+      </div>
+      <div class="item item-left-bottom">
+        <form>
+          <button type="submit" id="program" class="start {% if status %}red stop {% else %} started light-green {% endif %} waves-effect waves-light btn" status="{{status}}">
+            {% if status %}STOP{% else %}START{% endif %}
+          </button>
+        </form>
+      </div>
+    </div>
+  <div class="item item-main-right">
+    <h5>TERMINAL</h5>
+    <pre>
+    </pre>
+  </div>
+</div>
+<!-- Compiled and minified JavaScript -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script> -->
+<script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="https://raw.githubusercontent.com/vote539/socketio-file-upload/master/client.min.js"></script>
+<script type="text/javascript" src="js/jquery.json-viewer.js"></script>
+<script type="text/javascript">
+  var socket = io();
+
+  // Event permettant d'ajouter des messages dans la console
+  socket.on('messages', function(messages) {
+    for (var i = 0; i < messages.length; i++) {
+      $(".item-main-right pre").append('<div class="wrap" style="color: ' + messages[i].color + '">' + messages[i].text + '</div>');
+    }
+  });
+
+  // Event mettant à jour le boutton Start/Stop
+  socket.on('updateButton', function(status) {
+    $("#program").html(((status) ? "STOP" : "START"));
+  });
+
+  // Event qui met à jour l'affichage des fichier input/output
+  socket.on('updateView', function(data) {
+    var result = "";
+    for (var i = 0; i < data.files.length; i++) {
+      result += "<li><a href='" + data.files[i].path + "' target='_blank'>" + data.files[i].name + "</a></li>"
+    }
+    $("#" + data.directory).html(result);
+  });
+
+  // Event qui start/stop le programme
+  $('#program').on('click', function(e) {
+    e.preventDefault();
+    socket.emit('program');
+  });
+</script>
+</body>
+</html>

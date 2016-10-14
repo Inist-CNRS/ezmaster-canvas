@@ -16,7 +16,8 @@ var app = express(),
 
 /* Constants */
 // EzMaster config file
-var EZMASTER_CONFIG = require('../ezmaster.json'),
+// var EZMASTER_CONFIG = require('../ezmaster.json'), /* To make some test without building your image */
+var EZMASTER_CONFIG = require('/etc/ezmaster.json'),
   CONFIG = {
     name: "MyApp"
   };

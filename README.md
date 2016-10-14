@@ -70,7 +70,7 @@ RUN echo '{ \
   "dataPath": "/app/input/", \
   "outputPath": "/app/output/", \
   "program": { \
-    "directory": "", \
+    "directory": "/app/", \
     "cmd": "java", \
     "opts": ["myApp.jar", --input", "/app/input/", "--output", "/app/output/"] \
   } \

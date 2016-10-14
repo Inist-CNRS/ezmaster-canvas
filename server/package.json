@@ -1,5 +1,5 @@
 {
-  "name": "ezmaster-app-canvas",
+  "name": "ezmaster-canvas",
   "version": "1.0.0",
   "description": "Just a simple Http Server, usefull if you need to 'ezmasterize' and application with ouput data",
   "main": "index.js",

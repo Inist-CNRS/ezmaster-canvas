@@ -33,6 +33,9 @@
 }
 
 .item-left-top, .item-left-bottom{
+  width: 100%;
+  display: flex;
+  justify-content: center;
   max-height: 50%;
   height: 100%;
   overflow: auto;
@@ -44,6 +47,12 @@
           flex: 1;
   border: 1px solid white;
 }
+
+.item-left-bottom{
+  align-items: center;
+}
+
+
 
 #start{
   display: -webkit-box;
@@ -77,11 +86,6 @@ form[action="/program"]{
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-}
-
-.item-left-bottom .start{
-  width: 50%;
-  height: 50%;
 }
 
 .dropzone{
@@ -129,6 +133,10 @@ form[action="/program"]{
           flex-direction: column;
 }
 
+.red{
+  background: red;
+}
+
 .progress{
   width: 75%;
 }
@@ -138,7 +146,6 @@ form[action="/program"]{
 }
 
 .list-input, .list-output, .list-program{
-  max-width: 33.3%;
   overflow: auto;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;

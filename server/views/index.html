@@ -52,6 +52,7 @@
   // Event mettant à jour le boutton Start/Stop
   socket.on('updateButton', function(status) {
     $("#program").html(((status) ? "STOP" : "START"));
+    $("#program").toggleClass(((status) ? "red" : "light-green"));
   });
 
   // Event qui met à jour l'affichage des fichier input/output

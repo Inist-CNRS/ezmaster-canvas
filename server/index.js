@@ -16,7 +16,7 @@ var app = express(),
 
 /* Constants */
 // EzMaster config file
-var EZMASTER_CONFIG = require('/etc/ezmaster.json'),
+var EZMASTER_CONFIG = require('../ezmaster.json'),
   CONFIG = {
     name: "MyApp"
   };
@@ -26,9 +26,14 @@ if (EZMASTER_CONFIG.configPath) CONFIG = require(EZMASTER_CONFIG.configPath);
 
 // Directories
 const DIRECTORIES = {
-  'INPUT': path.resolve(__dirname, EZMASTER_CONFIG.dataPath),
-  'OUTPUT': path.resolve(__dirname, EZMASTER_CONFIG.outputPath),
-  'PROGRAM': path.resolve(__dirname, '../', EZMASTER_CONFIG.program.directory)
+  'INPUT': path.resolve(EZMASTER_CONFIG.dataPath),
+  'OUTPUT': path.resolve(EZMASTER_CONFIG.outputPath),
+  'PROGRAM': path.resolve(EZMASTER_CONFIG.program.directory)
+};
+// Routes
+const ROUTES = {
+  'INPUT': '/input',
+  'OUTPUT': '/output'
 };
 
 /* Variables */
@@ -57,10 +62,10 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Give public access for in/out directories
-app.use('/input', express.static(DIRECTORIES.INPUT, {
+app.use(ROUTES.INPUT, express.static(DIRECTORIES.INPUT, {
   dotfiles: 'allow'
 }));
-app.use('/output', express.static(DIRECTORIES.OUTPUT, {
+app.use(ROUTES.OUTPUT, express.static(DIRECTORIES.OUTPUT, {
   dotfiles: 'allow'
 }));
 app.use(express.static('public'));
@@ -76,14 +81,14 @@ io.on('connection', function(socket) {
   fs.readdir(DIRECTORIES.INPUT, function(err, files) {
     io.emit('updateView', {
       directory: 'input',
-      files: getFiles(DIRECTORIES.INPUT, files)
+      files: getFiles(ROUTES.INPUT, files)
     });
   });
   // Refresh file list of output directory
   fs.readdir(DIRECTORIES.OUTPUT, function(err, files) {
     io.emit('updateView', {
       directory: 'output',
-      files: getFiles(DIRECTORIES.OUTPUT, files)
+      files: getFiles(ROUTES.OUTPUT, files)
     });
   });
 
@@ -155,7 +160,7 @@ io.on('connection', function(socket) {
           if (err) throw new Error(kuler(err, 'red'));
           io.emit('updateView', {
             directory: 'output',
-            files: getFiles(DIRECTORIES.OUTPUT, files)
+            files: getFiles(ROUTES.OUTPUT, files)
           });
         });
       });
@@ -177,13 +182,13 @@ app.get('/', function(req, res) {
  * @param {Array} files List of files => [name, name, ...]
  * @return {Array} List of files with more infos (like name & full path) => [{name, path}, ...]
  */
-function getFiles(fullpath, files) {
+function getFiles(route, files) {
   var result = [];
   for (var i = 0; i < files.length; i++) {
     if (files[i][0] !== '.') {
       result.push({
         name: files[i],
-        path: path.join(fullpath, files[i])
+        path: path.join(route, files[i])
       })
     }
   }

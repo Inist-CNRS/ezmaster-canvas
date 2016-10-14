@@ -183,7 +183,7 @@ function getFiles(fullpath, files) {
     if (files[i][0] !== '.') {
       result.push({
         name: files[i],
-        path: path.join(fullpath.OUTPUT, files[i])
+        path: path.join(fullpath, files[i])
       })
     }
   }

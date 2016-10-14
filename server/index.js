@@ -72,6 +72,21 @@ server.listen(EZMASTER_CONFIG.httpPort, function() {
 
 io.on('connection', function(socket) {
 
+  // Refresh file list of input directory
+  fs.readdir(DIRECTORIES.INPUT, function(err, files) {
+    io.emit('updateView', {
+      directory: 'input',
+      files: getFiles(DIRECTORIES.INPUT, files)
+    });
+  });
+  // Refresh file list of output directory
+  fs.readdir(DIRECTORIES.OUTPUT, function(err, files) {
+    io.emit('updateView', {
+      directory: 'output',
+      files: getFiles(DIRECTORIES.OUTPUT, files)
+    });
+  });
+
   // Disconnect handler
   socket.on('disconnect', function() {
     console.log(kuler('Client disconnected', 'green'));
@@ -140,7 +155,7 @@ io.on('connection', function(socket) {
           if (err) throw new Error(kuler(err, 'red'));
           io.emit('updateView', {
             directory: 'output',
-            files: getFiles(files)
+            files: getFiles(DIRECTORIES.OUTPUT, files)
           });
         });
       });
@@ -150,26 +165,7 @@ io.on('connection', function(socket) {
 
 // Homepage
 app.get('/', function(req, res) {
-  let view = {
-    'input': false,
-    'ouput': false,
-    'status': false,
-    'pid': null
-  };
-  // Refresh file list of input directory
-  fs.readdir(DIRECTORIES.INPUT, function(err, files) {
-    io.emit('updateView', {
-      directory: 'input',
-      files: getFiles(files)
-    });
-  });
-  // Refresh file list of output directory
-  fs.readdir(DIRECTORIES.OUTPUT, function(err, files) {
-    io.emit('updateView', {
-      directory: 'output',
-      files: getFiles(files)
-    });
-  });
+  let view = {};
   //Send data to view
   view.status = program.running;
   view.name = CONFIG.name;
@@ -181,13 +177,13 @@ app.get('/', function(req, res) {
  * @param {Array} files List of files => [name, name, ...]
  * @return {Array} List of files with more infos (like name & full path) => [{name, path}, ...]
  */
-function getFiles(files) {
+function getFiles(fullpath, files) {
   var result = [];
   for (var i = 0; i < files.length; i++) {
     if (files[i][0] !== '.') {
       result.push({
         name: files[i],
-        path: path.join(DIRECTORIES.OUTPUT, files[i])
+        path: path.join(fullpath.OUTPUT, files[i])
       })
     }
   }

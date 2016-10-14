@@ -94,4 +94,4 @@ A name property need to be set in this file, so the server will diplay it as the
 
 ## Explanations
 
-*Nodejs Server will execute the command line `ls -alF` in `myApp/` directory*
+*Nodejs Server will execute the command line `java myApp.jar --input /app/input/ --output /app/output/` in `/app/` directory*
